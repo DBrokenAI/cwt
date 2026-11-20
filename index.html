@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CWT — Car · Wheel · Tire Fitment Studio</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><span></span></div>
+      <div>
+        <div class="brand-name">CWT</div>
+        <div class="brand-sub">Car · Wheel · Tire Fitment Studio</div>
+      </div>
+    </div>
+
+    <div class="search" id="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="text" autocomplete="off" spellcheck="false" placeholder="Type a vehicle — “2021 Tacoma”, “civic”, “f150 2019” — or paste a VIN" aria-label="Vehicle search">
+      <kbd>/</kbd>
+      <div class="results" id="results" hidden></div>
+    </div>
+
+    <nav class="actions">
+      <button class="btn ghost" id="btn-custom" title="Enter specs for a vehicle that isn't in the database">+ Custom vehicle</button>
+      <button class="btn ghost" id="btn-tools">Tools</button>
+      <button class="btn ghost" id="btn-inventory">Inventory</button>
+      <button class="btn primary" id="btn-print">Print fitment sheet</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+
+    <!-- LEFT: vehicle + paint -->
+    <aside class="col left">
+      <section class="card" id="vehicle-card">
+        <div class="card-h"><span>Vehicle</span><span class="tag" id="veh-body"></span></div>
+        <h2 id="veh-name">—</h2>
+        <label>Factory package on the car<select id="sel-oe"></select></label>
+        <div class="row3">
+          <label>Year<select id="sel-year"></select></label>
+          <label>Suspension<select id="sel-susp"></select></label>
+        </div>
+        <dl class="specs" id="veh-specs"></dl>
+        <div id="veh-flags"></div>
+        <div id="veh-notes"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><span>Paint</span><span class="tag" id="paint-name"></span></div>
+        <div class="swatches" id="paint-swatches"></div>
+        <div class="seg" id="paint-finish" role="group" aria-label="Paint finish">
+          <button data-f="metallic" class="on">Metallic</button><button data-f="gloss">Gloss</button><button data-f="matte">Matte</button>
+        </div>
+        <label class="color-pick">Match the exact color<input type="color" id="paint-custom" value="#b8bcc2"></label>
+      </section>
+
+      <p class="fineprint">CWT is a fitment guide. Always confirm against the door-jamb placard and test-fit one wheel before mounting tires.</p>
+    </aside>
+
+    <!-- CENTER: 3D stage + report -->
+    <section class="col center">
+      <div class="stage" id="stage">
+        <div class="viewport" id="viewport"></div>
+        <div class="hud tl">
+          <div class="verdict" id="verdict" data-v="oe"><i></i><b>Factory setup</b><span></span></div>
+        </div>
+        <div class="hud tr seg" id="views" role="group" aria-label="Camera view">
+          <button data-view="front34" class="on">3/4</button><button data-view="side">Side</button><button data-view="front">Front</button><button data-view="rear34">Rear</button><button data-view="top">Top</button><button data-view="wheel">Wheel</button>
+        </div>
+        <div class="hud bl" id="caption"></div>
+        <div class="hud br">
+          <button class="chip-btn on" id="btn-rotate" title="Auto-rotate">⟳ Rotate</button>
+          <button class="chip-btn" id="btn-env" title="Switch lighting">☾ Night</button>
+          <button class="chip-btn" id="btn-reset" title="Back to the factory wheels and tires">↺ Factory</button>
+        </div>
+        <div class="model-note" id="model-note"></div>
+        <div class="hint" id="hint">Drag to rotate · scroll to zoom · double-click to reset</div>
+        <div class="nogl" id="nogl" hidden>3D preview needs WebGL. Fitment checks still work — enable hardware acceleration in your browser to see the car.</div>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <section class="card report" id="report">
+        <div class="card-h"><span>Fitment report</span><span class="tag" id="report-sub"></span></div>
+        <div class="report-grid">
+          <div class="checks" id="checks"></div>
+          <div class="side">
+            <div id="diagram"></div>
+            <table class="compare" id="compare"></table>
+          </div>
+        </div>
+        <div class="hardware" id="hardware"></div>
+      </section>
+    </section>
+
+    <!-- RIGHT: catalog -->
+    <aside class="col right">
+      <div class="tabs" role="tablist">
+        <button class="tab on" data-tab="wheels" role="tab">Wheels <em id="count-wheels"></em></button>
+        <button class="tab" data-tab="tires" role="tab">Tires <em id="count-tires"></em></button>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="list" id="list"></div>
+    </aside>
+  </main>
+</div>
+
+<!-- dialogs -->
+<dialog id="dlg-custom" class="dlg">
+  <form method="dialog" id="form-custom">
+    <h3>Custom vehicle</h3>
+    <p class="muted">Enter the specs from the door placard, owner's manual or a fitment guide. Everything is checked against what you enter here.</p>
+    <div class="grid2">
+      <label>Year<input name="year" type="number" min="1950" max="2035" required></label>
+      <label>Make<input name="make" required></label>
+      <label>Model<input name="model" required></label>
+      <label>Body style<select name="body"><option value="sedan">Sedan</option><option value="coupe">Coupe</option><option value="hatch">Hatchback</option><option value="cuv">Crossover</option><option value="suv">SUV</option><option value="truck">Pickup (½-ton / midsize)</option><option value="hdtruck">Pickup (HD)</option><option value="jeep">Off-roader (Wrangler / Bronco)</option></select></label>
+      <label>Bolt pattern<input name="pcd" placeholder="5x114.3" pattern="[4-8]x[0-9.]+" required></label>
+      <label>Hub bore (mm)<input name="cb" type="number" step="0.1" required></label>
+      <label>Lug thread<input name="thread" placeholder="M12x1.5" required></label>
+      <label>Fastener<select name="fastener"><option value="nut">Lug nuts</option><option value="bolt">Lug bolts</option></select></label>
+      <label>Lug torque (lb-ft)<input name="torque" type="number" required></label>
+      <label>TPMS<select name="tpms"><option value="direct">Direct (sensors)</option><option value="indirect">Indirect (ABS-based)</option></select></label>
+      <label>Factory wheel diameter (in)<input name="d" type="number" step="1" required></label>
+      <label>Factory wheel width (in)<input name="w" type="number" step="0.5" required></label>
+      <label>Factory offset ET (mm)<input name="et" type="number" step="0.01" required></label>
+      <label>Factory tire size<input name="tire" placeholder="225/65R17 or LT275/70R18" required></label>
+      <label>Load index<input name="li" type="number" min="60" max="130" required></label>
+      <label>Speed rating<input name="sr" maxlength="1" pattern="[A-Za-z]" required></label>
+    </div>
+    <div class="dlg-actions"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn primary" value="ok">Save vehicle</button></div>
+  </form>
+</dialog>
+
+<dialog id="dlg-vin" class="dlg">
+  <h3>VIN decode</h3>
+  <div id="vin-body" class="muted">Looking up…</div>
+  <div class="dlg-actions"><button class="btn ghost" data-close>Close</button><button class="btn primary" id="vin-go" hidden>Use this vehicle</button></div>
+</dialog>
+
+<dialog id="dlg-inventory" class="dlg wide">
+  <h3>Shop inventory</h3>
+  <p class="muted">The built-in wheels are demo styles and the tire list is a starter set. Add what you actually stock here — it is saved in this browser and checked by the same fitment engine.</p>
+  <div class="inv-cols">
+    <form id="form-wheel">
+      <h4>Add a wheel</h4>
+      <div class="grid2">
+        <label>Brand<input name="brand" required></label>
+        <label>Style / model<input name="style" required></label>
+        <label>Diameter (in)<input name="d" type="number" min="13" max="26" required></label>
+        <label>Width (in)<input name="w" type="number" step="0.5" min="5" max="14" required></label>
+        <label>Offset ET (mm)<input name="et" type="number" step="0.01" required></label>
+        <label>Bolt pattern<input name="pcd" placeholder="5x114.3" pattern="[4-8]x[0-9.]+" required></label>
+        <label>Center bore (mm)<input name="cb" type="number" step="0.1" required></label>
+        <label>Load rating (lb)<input name="load" type="number"></label>
+        <label>Look<select name="design"><option value="five">5-spoke</option><option value="split5">Split 5-spoke</option><option value="multi">Multi-spoke</option><option value="mesh">Mesh</option><option value="turbine">Turbine</option><option value="six">6-spoke truck</option><option value="split8">8-spoke</option><option value="beadlock">Beadlock</option></select></label>
+        <label>Finish<select name="finish" id="inv-finish"></select></label>
+      </div>
+      <button class="btn primary">Add wheel</button>
+    </form>
+    <form id="form-tire">
+      <h4>Add a tire</h4>
+      <div class="grid2">
+        <label>Brand<input name="brand" required></label>
+        <label>Model<input name="model" required></label>
+        <label class="span2">Size + service description<input name="size" placeholder="235/45R18 98Y XL   or   LT285/70R17 121S E" required></label>
+        <label>Type<select name="tread"><option value="touring">All-season touring</option><option value="allweather">All-weather</option><option value="performance">Performance all-season</option><option value="summer">Summer</option><option value="winter">Winter</option><option value="highway">Highway truck</option><option value="at">All-terrain</option><option value="mt">Mud-terrain</option></select></label>
+        <label>3-peak snowflake<select name="threePMS"><option value="">No</option><option value="1">Yes</option></select></label>
+        <label>UTQG (optional)<input name="utqg" placeholder="560 AA A"></label>
+        <label>Warranty miles<input name="warranty" type="number" step="1000"></label>
+      </div>
+      <button class="btn primary">Add tire</button>
+    </form>
+  </div>
+  <div id="inv-list"></div>
+  <div class="dlg-actions">
+    <button class="btn ghost" id="inv-export">Export JSON</button>
+    <label class="btn ghost file">Import JSON<input type="file" id="inv-import" accept="application/json" hidden></label>
+    <span class="grow"></span>
+    <button class="btn primary" data-close>Done</button>
+  </div>
+</dialog>
+
+<dialog id="dlg-tools" class="dlg wide">
+  <h3>Counter tools</h3>
+  <div class="inv-cols">
+    <div>
+      <h4>DOT date code</h4>
+      <p class="muted">Enter the last four digits of the DOT number on the sidewall (week + year).</p>
+      <label>Date code<input id="dot-in" maxlength="4" inputmode="numeric" placeholder="2319"></label>
+      <div class="tool-out" id="dot-out"></div>
+    </div>
+    <div>
+      <h4>AWD tread match</h4>
+      <p class="muted">Tread depth of each tire in 32nds of an inch. Use a new tire's depth for any you plan to replace.</p>
+      <div class="grid4"><label>LF<input class="awd" type="number" step="0.5" min="0" max="20"></label><label>RF<input class="awd" type="number" step="0.5" min="0" max="20"></label><label>LR<input class="awd" type="number" step="0.5" min="0" max="20"></label><label>RR<input class="awd" type="number" step="0.5" min="0" max="20"></label></div>
+      <div class="tool-out" id="awd-out"></div>
+    </div>
+  </div>
+  <div class="dlg-actions"><span class="grow"></span><button class="btn primary" data-close>Done</button></div>
+</dialog>
+
+<div id="toasts" aria-live="polite"></div>
+<section id="print-sheet" aria-hidden="true"></section>
+
+<script src="js/data/vehicles.js"></script>
+<script src="js/data/tires.js"></script>
+<script src="js/data/wheels.js"></script>
+<script src="models/models.js"></script>
+<script src="js/fitment.js"></script>
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+<script>
+  // Real 3D models can only be loaded over http (Start CWT.bat). Opened as a file, CWT still runs with the stylized cars.
+  window.CWT_HTTP = location.protocol !== 'file:';
+  if (!window.CWT_HTTP) document.write('<script src="vendor/three.min.js"><\/script>');
+</script>
+<script type="module">
+  const load = src => new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.body.appendChild(s); });
+  if (window.CWT_HTTP) {
+    try {
+      const THREE = await import('three');
+      const { GLTFLoader } = await import('./vendor/jsm/loaders/GLTFLoader.js');
+      const { DRACOLoader } = await import('./vendor/jsm/loaders/DRACOLoader.js');
+      window.THREE = THREE;
+      window.CWT_LOADERS = { gltf: new GLTFLoader().setDRACOLoader(new DRACOLoader().setDecoderPath('vendor/draco/')) };
+    } catch (e) { console.error(e); await load('vendor/three.min.js'); }
+  }
+  await load('js/viewer.js');
+  await load('js/app.js');
+</script>
+</body>
+</html>

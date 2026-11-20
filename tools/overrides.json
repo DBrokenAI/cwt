@@ -1,0 +1,173 @@
+{
+ "accord-18": {
+  "paint": [
+   "Platinum White Metallic"
+  ]
+ },
+ "altima-19": {
+  "paint": [
+   "Material_01",
+   "Material_02"
+  ]
+ },
+ "bmw3-19": {
+  "paint": [
+   "Dravit Gray Metallic"
+  ],
+  "hide": [
+   "Color_004"
+  ]
+ },
+ "camaro-16": {
+  "paint": [
+   "vehicle_gene.003"
+  ]
+ },
+ "camry-18": {
+  "paint": [
+   "body color"
+  ]
+ },
+ "charger-14": {
+  "paint": [
+   "body color"
+  ]
+ },
+ "civic-16": {
+  "paint": [
+   "body color"
+  ]
+ },
+ "corolla-20": {
+  "paint": [
+   "Mat_sultan.2.003"
+  ]
+ },
+ "cx5-17": {
+  "paint": [
+   "_car carpaint"
+  ]
+ },
+ "elantra-21": {
+  "paint": [
+   "_CarPaint"
+  ]
+ },
+ "equinox-18": {
+  "paint": [
+   "cromado"
+  ]
+ },
+ "explorer-20": {
+  "paint": [
+   "Explorer white"
+  ]
+ },
+ "f150-15": {
+  "paint": [
+   "beige ford"
+  ]
+ },
+ "f150-21": {
+  "paint": [
+   "Carro Pintura"
+  ]
+ },
+ "f250-17": {
+  "paint": [
+   "Ford Body Color"
+  ]
+ },
+ "golf-15": {
+  "paint": [
+   "body"
+  ]
+ },
+ "grandcherokee-14": {
+  "paint": [
+   "Matte: FFFFFFF1",
+   "Matte: FF242424 1"
+  ]
+ },
+ "gti-15": {
+  "paint": [
+   "body1"
+  ]
+ },
+ "highlander-20": {
+  "paint": [
+   "Blizzard Pearl"
+  ]
+ },
+ "model3-17": {
+  "paint": [
+   "Model 3_Body"
+  ]
+ },
+ "modely-20": {
+  "paint": [
+   "Model Y_body"
+  ]
+ },
+ "mustang-15": {
+  "paint": [
+   "CSR2_CarPaint"
+  ]
+ },
+ "outback-20": {
+  "paint": [
+   "Material_01",
+   "Material_02"
+  ]
+ },
+ "ram2500-14": {
+  "paint": [
+   "[Color A05]"
+  ]
+ },
+ "rav4-19": {
+  "paint": [
+   "Silver Sky Metallic"
+  ]
+ },
+ "rogue-21": {
+  "paint": [
+   "Pearl_White_Tricoat"
+  ]
+ },
+ "silverado-19": {
+  "paint": [
+   "Mat_rancher..000"
+  ]
+ },
+ "tacoma-16": {
+  "paint": [
+   "Mat_rancher..012"
+  ]
+ },
+ "tahoe-21": {
+  "paint": [
+   "_PAINT_1_"
+  ]
+ },
+ "telluride-20": {
+  "paint": [
+   "Gravity_Gray"
+  ]
+ },
+ "tundra-22": {
+  "paint": [
+   "paint-glossy_primary"
+  ]
+ },
+ "wrangler-18": {
+  "paint": [
+   "_carpaint"
+  ]
+ },
+ "wrx-15": {
+  "paint": [
+   "Matte: FFFFFFFF1"
+  ]
+ }
+}
