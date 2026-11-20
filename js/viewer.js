@@ -288,24 +288,49 @@
       let outer = lat.length > 8 ? pct(lat, 0.97) : W / 2 - 0.03, inner = lat.length > 8 ? pct(lat, 0.03) : W / 2 - 0.3;
       if (outer - inner < 0.14 || outer - inner > 0.5) inner = outer - 0.27;
 
-      // 6. the model's own tire radius. Straight above each axle, inside the tire's width, the wheel is
-      //    solid from the ground to the top of the tread, then there is a gap before the wheel-well liner.
-      //    The model is a real car at real scale, so the answer must be near the factory tire radius.
+      // 6. the model's own tire radius. A tire is its own connected piece of mesh that touches the ground
+      //    at an axle and is as long as it is tall, so its height is the tire diameter. If the wheels are
+      //    welded into the body, fall back to the gap above the tread, then to the factory size.
       const rOE = (this.ref.archDia || this.ref.tireDia) * IN / 2;
-      let r0 = rOE;
+      let r0 = rOE, cover = 0;
       {
-        const HB = 0.01, hb = new Uint16Array(140), li = inner + (outer - inner) * 0.2, lo = outer - (outer - inner) * 0.2;
-        for (let i = 0; i < n; i++) {
-          const az = Math.abs(Z[i]);
-          if (az < li || az > lo || Y[i] > 1.39 || Y[i] < 0) continue;
-          if (Math.abs(X[i] - axF) < 0.07 || Math.abs(X[i] - axR) < 0.07) hb[Math.floor(Y[i] / HB)]++;
+        const canonX = (x, z) => ((rot ? z : x) - cx) * s - mid, canonZ = (x, z) => ((rot ? -x : z) - cz) * s;
+        const radii = [[], [], [], []];
+        meshes.forEach(m => {
+          const g = m.geometry, p = g.attributes.position, idx = g.index;
+          if (!idx || p.count > 2000000) return;
+          const par = new Int32Array(p.count); for (let i = 0; i < p.count; i++) par[i] = i;
+          const find = a => { while (par[a] !== a) { par[a] = par[par[a]]; a = par[a]; } return a; };
+          for (let t = 0; t < idx.count; t += 3) { const a = find(idx.getX(t)), b = find(idx.getX(t + 1)), c = find(idx.getX(t + 2)); if (a !== b) par[b] = a; if (a !== c) par[find(c)] = a; }
+          const box = new Map();
+          for (let i = 0; i < p.count; i++) {
+            v.fromBufferAttribute(p, i).applyMatrix4(m.matrixWorld);
+            const x = canonX(v.x, v.z), y = (v.y - y0) * s, z = canonZ(v.x, v.z), r = find(i);
+            let b = box.get(r); if (!b) box.set(r, b = [x, x, y, y, 0, 0]);
+            if (x < b[0]) b[0] = x; if (x > b[1]) b[1] = x; if (y < b[2]) b[2] = y; if (y > b[3]) b[3] = y; b[4] += z; b[5]++;
+          }
+          box.forEach(b => {
+            const h = b[3], len = b[1] - b[0], xc = (b[0] + b[1]) / 2, zc = b[4] / b[5];
+            if (b[5] < 24 || b[2] > 0.04 || h < 0.45 || h > 1.25 || len < h * 0.85 || len > h * 1.15 || Math.abs(zc) < inner - 0.12) return;
+            const front = Math.abs(xc - axF) < 0.1, rear = Math.abs(xc - axR) < 0.1;
+            if (front || rear) radii[(front ? 0 : 2) + (zc > 0 ? 0 : 1)].push(h / 2);
+          });
+        });
+        const per = radii.map(a => (a.length ? Math.max(...a) : 0)).filter(Boolean).sort((a, b) => a - b);
+        const rc = per.length >= 2 ? per[Math.floor((per.length - 1) / 2)] : 0;
+        if (rc > rOE * 0.88 && rc < rOE * 1.35) { r0 = rc; cover = per.length / 4; }
+        else {
+          const HB = 0.01, hb = new Uint16Array(140), li = inner + (outer - inner) * 0.2, lo = outer - (outer - inner) * 0.2;
+          for (let i = 0; i < n; i++) {
+            const az = Math.abs(Z[i]);
+            if (az < li || az > lo || Y[i] > 1.39 || Y[i] < 0) continue;
+            if (Math.abs(X[i] - axF) < 0.07 || Math.abs(X[i] - axR) < 0.07) hb[Math.floor(Y[i] / HB)]++;
+          }
+          let top = 0;
+          for (let b = Math.floor(rOE * 2 * 0.72 / HB); b < Math.min(139, Math.ceil(rOE * 2 * 1.25 / HB)); b++) { if (hb[b] > 0) top = b; else if (top && b - top >= 3) break; }
+          const r = (top + 1) * HB / 2;
+          if (top && Math.abs(r - rOE) / rOE < 0.2) r0 = r;
         }
-        let top = 0;
-        for (let b = Math.floor(rOE * 2 * 0.72 / HB); b < Math.min(139, Math.ceil(rOE * 2 * 1.25 / HB)); b++) {
-          if (hb[b] > 0) top = b; else if (top && b - top >= 3) break;
-        }
-        const r = (top + 1) * HB / 2;
-        if (top && Math.abs(r - rOE) / rOE < 0.2) r0 = r;
       }
 
       // 7. which end is the front? red (tail-light) material sits at the back; spec.flip overrides the guess
@@ -355,7 +380,8 @@
       Object.assign(clip, { on: true });
       clip.uniforms.uCwtAx.value.set(axF, axR);
       clip.uniforms.uCwtR0.value = r0;
-      clip.uniforms.uCwtR.value = spec.keepWheels ? 0 : r0 * 1.035 + 0.006;
+      // a little beyond the tread; if the tire could not be isolated, never cut less than the factory tire
+      clip.uniforms.uCwtR.value = spec.keepWheels ? 0 : (cover ? r0 : Math.max(r0, rOE)) * 1.02 + 0.012;
       clip.uniforms.uCwtIn.value = Math.max(inner - 0.05, 0.3);
       meshes.forEach(m => {
         m.castShadow = true;
@@ -373,7 +399,7 @@
 
       const box = new THREE.Box3().setFromObject(group);
       const mats = [...area.entries()].sort((p, q) => q[1] - p[1]).slice(0, 7).map(([mm, ar]) => `${mm.name || '?'} ${Math.round(ar / totalArea * 100)}% #${mm.color ? mm.color.getHexString() : ''}${mm.map ? ' tex' : ''}${mm.transparent ? ' transp' : ''}`);
-      return { group, geo: { model: true, auto: true, found, mats, paintName: paintMat ? paintMat.name : null, painted: !!paintMat && !single, wb: axF - axR, axF, axR, outer, r0,
+      return { group, geo: { model: true, auto: true, found, cover, mats, paintName: paintMat ? paintMat.name : null, painted: !!paintMat && !single, wb: axF - axR, axF, axR, outer, r0,
         L: box.max.x - box.min.x, W: box.max.z - box.min.z, H: box.max.y, xF: box.max.x, xR: box.min.x } };
     }
 

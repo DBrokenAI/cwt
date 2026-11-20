@@ -30,7 +30,7 @@
  },
  "charger-14": {
   "paint": [
-   "body color"
+   "Meshpart10Mtl"
   ]
  },
  "civic-16": {
@@ -85,8 +85,7 @@
  },
  "grandcherokee-14": {
   "paint": [
-   "Matte: FFFFFFF1",
-   "Matte: FF242424 1"
+   "Body"
   ]
  },
  "gti-15": {
@@ -116,8 +115,7 @@
  },
  "outback-20": {
   "paint": [
-   "Material_01",
-   "Material_02"
+   "Autumn_Green_Metallic"
   ]
  },
  "ram2500-14": {
@@ -137,7 +135,7 @@
  },
  "silverado-19": {
   "paint": [
-   "Mat_rancher..000"
+   "B4W_carpaint"
   ]
  },
  "tacoma-16": {
@@ -168,6 +166,36 @@
  "wrx-15": {
   "paint": [
    "Matte: FFFFFFFF1"
+  ]
+ },
+ "escalade-21": {
+  "paint": [
+   "car_body"
+  ]
+ },
+ "sportage-23": {
+  "paint": [
+   "Wolf_Gray.001"
+  ]
+ },
+ "durango-14": {
+  "paint": [
+   "Meshpart12Mtl"
+  ]
+ },
+ "suburban-15": {
+  "paint": [
+   "default"
+  ]
+ },
+ "kona-18": {
+  "paint": [
+   "CeramicBlue"
+  ]
+ },
+ "r1t-22": {
+  "paint": [
+   "Material.008"
   ]
  }
 }

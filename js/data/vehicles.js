@@ -247,6 +247,39 @@
       ['Rubicon', 17, 7.5, 44.45, 'LT255/75R17', 111, 'Q', 1],
     ], ['JK uses 1/2"-20 studs — JL (2018+) lug nuts are M14x1.5 and do not interchange.'], [], ['NOT CROSS-CHECKED: this row was entered from memory. Confirm every spec before ordering.']),
 
+    // ── Added Nov 2026 with their 3D models (researched; offsets mostly from a single fitment table) ──
+    V('escalade-21', 'Cadillac', 'Escalade', 2021, 2025, 'suv', '6x139.7', 78.1, 'M14x1.5', 'nut', 140, 'direct', [3071, 5382, 2060, 1948], 22, 33.5, [
+      ['All trims (22")', 22, 9, 28, '275/50R22', 111, 'H'],
+    ], ['Escalade IQ (electric) is a different vehicle with a different hub — not covered.'], [],
+    ['One source says 20x9 wheels are standard on Luxury / Premium Luxury; 18" and 20" brake clearance is not confirmed, so the minimum here is 22".', 'Lug torque is from fitment sites, not a GM manual.']),
+    V('suburban-15', 'Chevrolet', 'Suburban', 2015, 2020, 'suv', '6x139.7', 78.1, 'M14x1.5', 'nut', 140, 'direct', [3302, 5700, 2045, 1890], 17, 33.0, [
+      ['Base / fleet (17")', 17, 8, 24, '265/70R17', 115, 'S'],
+      ['LS / LT', 18, 8.5, 24, '265/65R18', 112, 'T'],
+      ['LTZ / Premier', 20, 9, 27, '275/55R20', 111, 'S'],
+      ['Optional 22"', 22, 9, 24, '285/45R22', 110, 'H'],
+    ], ['Excludes the 8-lug 3500HD.'], [], ['20" wheel offset is listed as ET27 and ET28.']),
+    V('durango-14', 'Dodge', 'Durango', 2014, 2025, 'suv', '5x127', 71.5, 'M14x1.5', 'nut', 130, 'direct', [3043, 5100, 1925, 1800], 18, null, [
+      ['SXT / V6', 18, 8, 56.4, '265/60R18', 109, 'T'],
+      ['GT / R/T / Citadel', 20, 8, 56.4, '265/50R20', 108, 'H'],
+    ], ['SRT 392 / Hellcat use 20x10 ET50 wheels, 295/45ZR20 tires and 110 lb-ft lug torque — not covered by this entry.', 'The 3D model shown is the SRT body.'], [],
+    ['Wheel packages follow the engine more than the trim name — check what is on the vehicle.']),
+    V('sportage-23', 'Kia', 'Sportage', 2023, 2025, 'cuv', '5x114.3', 67.1, 'M12x1.5', 'nut', 87, 'direct', [2756, 4661, 1864, 1661], 17, null, [
+      ['LX / X-Pro', 17, 7, 48, '235/65R17', 104, 'H'],
+      ['EX / SX', 18, 7.5, 51, '235/60R18', 103, 'H'],
+      ['SX Prestige / X-Line / PHEV', 19, 7.5, 51, '235/55R19', 101, 'V'],
+    ], ['Kia specifies lug torque as a range: 79–94 lb-ft.'], [], ['Wheel offsets come from a single source.', 'Speed ratings on the 18" and 19" tires were hard to read in the manual — check the door placard.']),
+    V('kona-18', 'Hyundai', 'Kona', 2018, 2023, 'cuv', '5x114.3', 67.1, 'M12x1.5', 'nut', 87, 'direct', [2600, 4205, 1800, 1565], 16, null, [
+      ['SE (2.0)', 16, 6.5, 44, '205/60R16', 92, 'H'],
+      ['SEL (2.0) / Electric', 17, 7, 50, '215/55R17', 94, 'V'],
+      ['Limited / Ultimate / N Line (1.6T)', 18, 7.5, 52, '235/45R18', 94, 'V'],
+    ], ['Hyundai specifies lug torque as a range: 79–94 lb-ft.', 'Kona N uses 19x8 ET48 with 235/40R19 — not covered.', 'The 3D model shown is the Kona Electric body.'], [],
+    ['Whether 16" wheels clear the 1.6T brakes is not confirmed.', 'Wheel offsets come from a single source.']),
+    V('r1t-22', 'Rivian', 'R1T', 2022, 2025, 'truck', '5x139.7', 64.1, 'M14x1.5', 'nut', 140, 'direct', [3449, 5514, 2007, 1986], 20, 35.0, [
+      ['All-Terrain (20")', 20, 8.5, 48, '275/65R20', 116, 'H'],
+      ['Road (21")', 21, 8.5, 48, '275/55R21', 116, 'H'],
+    ], ['EV: heavy vehicle — match or exceed the factory load index. Later 22" cars use HL-rated tires; never replace HL with XL.'], [],
+    ['21" package and all wheel widths are from forum / retailer listings, not Rivian.', 'Hub bore 64.1 mm comes from a single fitment table — measure before ordering hub rings.', '22" Sport package is not listed because its tire rating could not be confirmed.']),
+
     // ── Real-3D-model demo ─────────────────────────────────
     V('ferrari458-10', 'Ferrari', '458 Italia (3D demo)', 2010, 2015, 'coupe', '5x114.3', 67.1, 'M14x1.5', 'bolt', 74, 'direct', [2650, 4527, 1937, 1213], 19, null, [
       ['Front axle size', 20, 8.5, 35, '235/35R20', 88, 'Y'],

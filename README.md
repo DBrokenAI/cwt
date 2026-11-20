@@ -8,7 +8,7 @@ Double-click `Start CWT.bat`. It serves the folder to this PC only and opens CWT
 
 ## Real 3D models
 
-Every vehicle in the database (41) has a real 3D body. Thirty-four were found on SketchUp 3D Warehouse and Objaverse and are fitted automatically when they load: CWT scales the model to the real wheelbase, finds its wheels, removes them and mounts the selected wheels in their place. Six trucks and SUVs plus thirteen wheel styles and three tire treads come from the 4x4builder project; real wheels and treads are marked "Real 3D" in the lists.
+Every vehicle in the database (47) has a real 3D body. Forty were found on SketchUp 3D Warehouse and in public GitHub repos (Creative Commons models) and are fitted automatically when they load: CWT scales the model to the real wheelbase, finds its wheels, removes them and mounts the selected wheels in their place. Six trucks and SUVs plus thirteen wheel styles and three tire treads come from the 4x4builder project; real wheels and treads are marked "Real 3D" in the lists.
 
 None of these models ships with a licence for this use, so treat them as an in-store preview, not something to publish. Sources and authors are listed in `models/SOURCES.md`. `tools/README.md` explains how to add more vehicles.
 
@@ -30,7 +30,7 @@ A red result means do not sell it. Amber means it can work but needs a test-fit,
 
 ## Data: what is real and what is not
 
-- `js/data/vehicles.js` — 37 vehicle generations. Specs were cross-checked against published fitment tables in November 2026. Where sources disagreed, the row carries a flag that shows in the app as "Confirm before ordering".
+- `js/data/vehicles.js` — 47 vehicle generations. Specs were cross-checked against published fitment tables in November 2026. Where sources disagreed, the row carries a flag that shows in the app as "Confirm before ordering".
 - `js/data/tires.js` — 14 real tire lines with sizes, load index and speed rating, cross-checked the same way. The 1–10 bars are guide scores for comparing tire types, not lab data.
 - `js/data/wheels.js` — **demo wheels**. The styles are made up so the tool has something to show; the specs are realistic. Replace them with what you stock.
 

@@ -212,7 +212,7 @@
       procedural: 'Stylized body (no 3D model mapped for this vehicle yet). Wheels and tires are to scale.',
     }[state];
     el.innerHTML = txt || ''; el.dataset.state = state; el.title = (spec && spec.credit) || '';
-    if (DBG && state === 'model' && viewer.geo.auto) el.innerHTML = `<div style="text-align:left;background:#000c;color:#fff;padding:4px;font:11px monospace">axles ${viewer.geo.found ? 'found' : 'GUESSED'} · r0 ${viewer.geo.r0.toFixed(3)} · paint ${esc(viewer.geo.paintName)} ${viewer.geo.painted ? '' : '(NOT applied)'}<br>${viewer.geo.mats.map(esc).join('<br>')}</div>`;
+    if (DBG && state === 'model' && viewer.geo.auto) el.innerHTML = `<div style="text-align:left;background:#000c;color:#fff;padding:4px;font:11px monospace">axles ${viewer.geo.found ? 'found' : 'GUESSED'} · r0 ${viewer.geo.r0.toFixed(3)} cover ${Math.round(viewer.geo.cover * 100)}% · paint ${esc(viewer.geo.paintName)} ${viewer.geo.painted ? '' : '(NOT applied)'}<br>${viewer.geo.mats.map(esc).join('<br>')}</div>`;
   }
 
   // ── Refresh everything that depends on the selection ─────

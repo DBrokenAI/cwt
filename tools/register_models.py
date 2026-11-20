@@ -8,11 +8,16 @@ s = open(p, encoding='utf-8').read()
 s = re.sub(r"\n    // <auto>.*?// </auto>\n", "\n", s, flags=re.S)
 lines = ["    // <auto> complete-car models fitted automatically (generated — edit flip / paint / drop per car if one looks wrong)"]
 for vid in sorted(ing):
-    if not os.path.exists(os.path.join(PROJ, 'models', 'cars', vid + '.glb')): continue
     c = ing[vid]
     if ov.get(vid, {}).get('skip'): continue
-    src = '3D Warehouse' if c['src'] == '3dw' else 'Sketchfab / Objaverse'
-    e = {'file': f'models/cars/{vid}.glb', 'name': c['title'].strip(), 'credit': f"model by {c['by'] or 'unknown'}, {src} — in-store preview only", 'auto': True}
+    f = ov.get(vid, {}).get('file', f'models/cars/{vid}.glb')
+    if not os.path.exists(os.path.join(PROJ, f)): continue
+    if c['src'] == 'gh':
+        credit = f"\"{c['title'].strip()}\" from Sketchfab, {c.get('lic') or 'CC BY 4.0'}, via github.com/{c['id']}"
+    else:
+        src = '3D Warehouse' if c['src'] == '3dw' else 'Sketchfab / Objaverse'
+        credit = f"model by {c['by'] or 'unknown'}, {src}"
+    e = {'file': f, 'name': c['title'].strip(), 'credit': credit, 'auto': True}
     e.update({k: v for k, v in ov.get(vid, {}).items() if k != 'skip'})
     lines.append(f"    '{vid}': {json.dumps(e, ensure_ascii=False)},")
 lines.append("    // </auto>")

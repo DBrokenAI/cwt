@@ -84,10 +84,11 @@
   "id": "5634ed47-39fb-49e5-8657-f12b83b29f55"
  },
  "silverado-19": {
-  "title": "2022 Chevrolet Silverado - LTZ",
-  "by": "3DModels by Vehi3d Project",
-  "src": "3dw",
-  "id": "3b5ea0c5-8083-4946-af07-0a0defbdd0fb"
+  "title": "2020 Chevrolet Silverado 1500 RST",
+  "by": "",
+  "src": "gh",
+  "id": "Jhan-ux/lanzamiento_suvs",
+  "lic": "CC-BY-4.0"
  },
  "tahoe-21": {
   "title": "2021 Chevrolet Tahoe RST",
@@ -120,16 +121,18 @@
   "id": "bb932b07-687e-45e5-8ab5-41c5d8fff6c3"
  },
  "grandcherokee-14": {
-  "title": "2016 Jeep Grand Cherokee",
-  "by": "tyler K.",
-  "src": "3dw",
-  "id": "d15873e8-f88b-4b2e-91dd-d3b8d4fab2de"
+  "title": "Jeep Grand Cherokee Trackhawk",
+  "by": "",
+  "src": "gh",
+  "id": "kavinda9210/3Dmodels",
+  "lic": "CC-BY-4.0"
  },
  "charger-14": {
-  "title": "2015 Dodge Charger Hellcat",
-  "by": "captainkirk",
-  "src": "3dw",
-  "id": "u4f79dd61-72a2-4788-979b-2590605001b5"
+  "title": "Ddoge Charger SXT 2020",
+  "by": "",
+  "src": "gh",
+  "id": "djamelhemch/topdzmotors",
+  "lic": "CC-BY-4.0"
  },
  "altima-19": {
   "title": "Nissan Altima 2022",
@@ -144,10 +147,11 @@
   "id": "5b34ef86-eb9e-45a3-9305-71c735b30ca8"
  },
  "outback-20": {
-  "title": "Subaru Outback 2022",
-  "by": "David W.",
-  "src": "3dw",
-  "id": "227cda88-c651-4154-81b6-16e7d7db14cc"
+  "title": "2022 Subaru Outback",
+  "by": "",
+  "src": "gh",
+  "id": "ibasin/FSCSharp",
+  "lic": "CC-BY-4.0"
  },
  "wrx-15": {
   "title": "2015 Subaru Impreza WRX STI",
@@ -202,5 +206,47 @@
   "by": "Firas Somai",
   "src": "3dw",
   "id": "5ccd457d-c884-48ef-a5c5-e0aff0e1c01b"
+ },
+ "escalade-21": {
+  "title": "2021 Cadillac escalade premium luxury",
+  "by": "",
+  "src": "gh",
+  "id": "ritesh-kumar289/cars-landing-page",
+  "lic": "CC-BY-4.0"
+ },
+ "sportage-23": {
+  "title": "Kia Sportage",
+  "by": "",
+  "src": "gh",
+  "id": "adi-Git-Hub/final-3d-road-car-application",
+  "lic": "CC-BY-4.0"
+ },
+ "durango-14": {
+  "title": "Dodge Durango SRT 392",
+  "by": "",
+  "src": "gh",
+  "id": "sundaymoore313-tech/mygarage",
+  "lic": "CC-BY-4.0"
+ },
+ "suburban-15": {
+  "title": "2015 Chevy Suburban",
+  "by": "",
+  "src": "gh",
+  "id": "Jhan-ux/lanzamiento_suvs",
+  "lic": "CC-BY-4.0"
+ },
+ "kona-18": {
+  "title": "Hyundai Kona",
+  "by": "",
+  "src": "gh",
+  "id": "amitpatharkar/gtb",
+  "lic": "CC-BY-4.0"
+ },
+ "r1t-22": {
+  "title": "Rivian R1T 2022 [Free!]",
+  "by": "",
+  "src": "gh",
+  "id": "vinayanand3/jeep-threejs-3d",
+  "lic": "CC-BY-4.0"
  }
 }
