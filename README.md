@@ -1,18 +1,21 @@
 # CWT — Car · Wheel · Tire Fitment Studio
 
-A counter tool for a wheel and tire shop: pick the customer's vehicle, see which wheels and tires fit and why, and preview the build on a 3D car in their paint color.
+A browser-based counter tool for a wheel and tire shop: pick the customer's vehicle, see which wheels and tires fit and why, and preview the build on a 3D car in their paint color. It is a static site with no backend and no build step.
 
-## Run it
+**Live demo:** https://dbrokenai.github.io/cwt/
 
-Double-click `Start CWT.bat`. It serves the folder to this PC only and opens CWT in the browser; this is what lets it load real 3D model files. Opening `index.html` directly still works, but only with the stylized cars. VIN decode needs internet; everything else is offline.
+## What it does
 
-## Real 3D models
+- **Vehicle lookup.** Search by year, make and model (with aliases), or paste a 17-character VIN to decode it through the free NHTSA vPIC API. Vehicles that are not in the database can be added by hand.
+- **Fitment report.** Every wheel and tire in the catalog is checked against the selected vehicle and badged as direct fit, fits with notes, or does not fit. Selecting one shows each check with a plain-language reason.
+- **3D preview.** The car is shown with the selected wheel, finish, tire, paint color and ride height. Wheels and tires are drawn to scale: diameter, width, sidewall, offset, lug count and lift.
+- **Numbers the salesperson needs.** Overall diameter change, speedometer error at 60 mph, ride height change, revs per mile, how far the wheel moves in or out versus factory, and a cross-section diagram of the wheel position relative to the hub face.
+- **Install sheet and print-out.** Lug hardware, hub-centric ring size, TPMS steps and torque, plus a printable fitment sheet with a snapshot of the 3D view and signature lines.
+- **Shop inventory.** Add your own wheels and tires in the app; they are saved in the browser and can be exported and imported as JSON.
+- **Shareable builds.** The address bar always holds a link to the current vehicle, wheel, tire and suspension choice.
+- **Counter tools.** A DOT date-code decoder for tire age, and an AWD tread-depth match check.
 
-Every vehicle in the database (47) has a real 3D body. Forty were found on SketchUp 3D Warehouse and in public GitHub repos (Creative Commons models) and are fitted automatically when they load: CWT scales the model to the real wheelbase, finds its wheels, removes them and mounts the selected wheels in their place. Six trucks and SUVs plus thirteen wheel styles and three tire treads come from the 4x4builder project; real wheels and treads are marked "Real 3D" in the lists.
-
-None of these models ships with a licence for this use, so treat them as an in-store preview, not something to publish. Sources and authors are listed in `models/SOURCES.md`. `tools/README.md` explains how to add more vehicles.
-
-## What it checks
+### Fitment checks
 
 | Check | Rule |
 |---|---|
@@ -28,15 +31,29 @@ None of these models ships with a licence for this use, so treat them as an in-s
 
 A red result means do not sell it. Amber means it can work but needs a test-fit, a part, or customer sign-off.
 
-## Data: what is real and what is not
+## How it is built
 
-- `js/data/vehicles.js` — 47 vehicle generations. Specs were cross-checked against published fitment tables in November 2026. Where sources disagreed, the row carries a flag that shows in the app as "Confirm before ordering".
-- `js/data/tires.js` — 14 real tire lines with sizes, load index and speed rating, cross-checked the same way. The 1–10 bars are guide scores for comparing tire types, not lab data.
-- `js/data/wheels.js` — **demo wheels**. The styles are made up so the tool has something to show; the specs are realistic. Replace them with what you stock.
+Plain HTML, CSS and JavaScript with three.js r160 (vendored, including the glTF and Draco loaders). No framework, no bundler, no npm dependencies at runtime.
 
-Add your own wheels and tires with the **Inventory** button (saved in the browser, with JSON export and import), or edit the data files. Add vehicles that are missing with **+ Custom vehicle**.
+- **Fitment engine as pure functions** (`js/fitment.js`). No DOM access, so the same file runs in the browser and under Node for tests. It parses metric, LT and flotation tire sizes (`225/65R17 102H`, `LT285/70R17 121/118S E`, `35x12.50R17LT 121Q E`), estimates approved rim-width ranges by aspect ratio, and models the wheel and tire as an envelope measured from the hub face to compare against the vehicle's factory packages.
+- **Automatic fitting of arbitrary car models** (`js/viewer.js`, `_autoFit`). The 40 community car models arrive with different scales, orientations and their own wheels baked in. At load time the viewer samples the vertices, finds the length axis, scales to the real vehicle length, locates the axles as the two clusters of ground-contact points (then fine-scales to the true wheelbase), measures the model's own tire radius from connected mesh components using union-find, guesses which end is the front from tail-light-colored materials, and identifies the body-paint material by surface area and name. Per-model overrides live in the manifest for the cases where a guess is wrong.
+- **Shader-level wheel removal.** The model's original wheels are cut out with a fragment-shader `discard` injected through `onBeforeCompile` (two cylinders around the axle lines), so the selected wheels can be drawn in the same place without editing the model files.
+- **Procedural fallbacks.** If a model is missing or fails to load, the viewer draws a stylized body per body type sized to the real wheelbase, length, width and height. Wheels without a 3D model are generated from spoke-design parameters; tires are lathe geometry with canvas-generated tread textures and instanced tread blocks for all-terrain and mud-terrain types. Real tire models are re-mapped vertex by vertex so the bead sits on the chosen rim and the tread lands on the true overall diameter.
+- **Works from `file://` or over HTTP.** Opened as a file, the page loads the global three.js build and uses the stylized cars. Served over HTTP, it loads the ES-module build and the glTF loader for the real models.
+- **Zero-dependency local server** (`server.js`). About 40 lines of Node `http`, bound to 127.0.0.1, with a path-traversal guard.
+- **Model pipeline** (`tools/`). Python and Node scripts that search for candidate models, download and compress them with gltf-transform (Draco geometry, WebP textures), list materials by surface area to find the paint, and generate the manifest entries in `models/models.js`.
 
-The 3D car is a stylized body per body type, sized to the real wheelbase, length, width and height. The wheels and tires are true to scale: diameter, width, sidewall, offset, lug count and ride height.
+## Run it
+
+Use the live demo above, or run it locally:
+
+```
+node server.js
+```
+
+This serves the folder at `http://localhost:5178` (override with the `CWT_PORT` environment variable) and opens the browser. On Windows you can double-click `Start CWT.bat` instead; it falls back to `python -m http.server` if Node is not installed.
+
+Opening `index.html` directly also works, but only with the stylized cars. VIN decode needs internet; everything else is offline.
 
 ## Tests
 
@@ -44,17 +61,39 @@ The 3D car is a stylized body per body type, sized to the real wheelbase, length
 node tests/fitment.test.js
 ```
 
-Covers the fitment rules, and checks that every factory package passes on its own vehicle.
+Fourteen tests using Node's built-in `assert`, no test framework. They cover tire-size parsing and each fitment rule, and run data-integrity checks over the whole database: every catalog tire size parses, every factory package passes on its own vehicle, and every vehicle has at least one clean-fitting wheel and tire.
 
-## Upgrade roadmap
+## Project structure
 
-Ranked by value for the effort.
+```
+index.html            page layout, dialogs, script loading
+css/styles.css        styling, including the print sheet
+js/fitment.js         fitment engine (pure functions, shared with tests)
+js/viewer.js          three.js viewer: model auto-fit, procedural car, wheels, tires, camera
+js/app.js             UI state, search, catalog, report, inventory, VIN decode, printing
+js/data/              vehicles, tires and wheels
+models/               GLB files, models.js manifest, SOURCES.md
+tools/                model search / ingest / registration scripts (see tools/README.md)
+tests/                fitment tests
+server.js             local static server
+vendor/               three.js r160, GLTFLoader, DRACOLoader, Draco decoder
+```
 
-1. **License real fitment data.** Wheel-Size.com's API covers 60,000+ vehicle variants with bolt pattern, bore, thread, torque and OE sizes. Plans start around $450–750 a year, with a free sandbox. Its terms require live calls rather than a stored copy. This replaces the 37-vehicle database.
-2. **Load distributor inventory and pricing.** Wheel Pros offers dealer data feeds with bolt pattern, bore and offset; Tireweb and TireConnect offer live inventory and pricing. All need a dealer account, so ask your rep. This replaces the demo wheels and adds prices to the quote.
-3. **Real car models.** Swap the stylized bodies for licensed glTF models of your top-selling vehicles. Budget for paid models and check each licence.
-4. **Staggered setups.** Separate front and rear wheel and tire, for Mustang, Camaro and BMW customers.
-5. **Rub-level labels.** Record what actually happened on each install ("slight rub at full lock") and show it the next time that combination comes up.
-6. **Wet stopping distance, new versus worn.** Needs test data from the tire makers.
-7. **TPMS relearn procedure per vehicle** on the install sheet (auto, stationary or OBD).
-8. **Customer quote with pricing**, saved builds, and a link you can text to the customer. The address bar already holds a link to the current build.
+## Data: what is real and what is not
+
+- `js/data/vehicles.js` — 47 vehicle generations. Specs were cross-checked against published fitment tables in November 2026. Where sources disagreed, the row carries a flag that shows in the app as "Confirm before ordering".
+- `js/data/tires.js` — 14 real tire lines with sizes, load index and speed rating, cross-checked the same way. The 1–10 bars are guide scores for comparing tire types, not lab data.
+- `js/data/wheels.js` — 13 real aftermarket wheel styles that have 3D models (sizes listed are common ones for the style, not confirmed SKUs), plus **demo wheels** with made-up styles and realistic specs. Replace them with what you stock.
+
+## 3D models and credits
+
+Every vehicle in the database has a 3D body. Forty come from SketchUp 3D Warehouse and from public GitHub repos carrying CC BY 4.0 Sketchfab models; these are the ones fitted automatically at load time. Six trucks and SUVs, the rim models and the tire treads come from the 4x4builder project. The Ferrari 458 is from the three.js examples (model by vicent091036).
+
+The CC BY models are used under their licence. The others do not ship with a licence for this use, so treat them as a preview, not something to redistribute. Authors and source links are listed per model in `models/SOURCES.md`.
+
+## Status and limitations
+
+- Fitment results are guidance. Clearance is estimated from wheel width and offset relative to the factory package, not measured on the vehicle, and rim-width ranges are approximations. Confirm against the door-jamb placard and test-fit before mounting.
+- Square setups only; staggered front and rear sizes are not supported.
+- No pricing, distributor inventory feed or licensed fitment database. The vehicle database is a hand-built set of 47 generations.
+- Inventory and custom vehicles are stored in the browser's `localStorage`, so they are per-device unless exported.
