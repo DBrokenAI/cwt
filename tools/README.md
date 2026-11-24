@@ -1,6 +1,6 @@
 # Model tools
 
-How the real car bodies were added. Needs Python 3 and Node, plus `npm i @gltf-transform/cli draco3dgltf` in a scratch folder.
+How the real car bodies were added. 3D Warehouse models have no licence for public redistribution: only commit a model to the repository if its licence allows redistribution (for example CC BY, with the author recorded in `models/SOURCES.md`). Needs Python 3 and Node, plus `npm i @gltf-transform/cli draco3dgltf` in a scratch folder.
 
 1. `find_models.py` searches 3D Warehouse and the Objaverse index for each vehicle and writes `cands.json` plus thumbnail contact sheets. It expects `object-paths.json.gz` and `cars_all.json` (Objaverse metadata) beside it.
 2. Look at the sheets, choose a candidate number per vehicle, and put it in `PICK` in `ingest_models.py`. That script downloads each GLB and shrinks it with gltf-transform (about 20 MB down to about 1 MB) into `models/cars/`.

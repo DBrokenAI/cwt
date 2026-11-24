@@ -24,27 +24,28 @@
 
   const REAL_CB = { '6x139.7': 106.1, '6x135': 87.1, '5x127': 71.5, '5x150': 110.1 };
   const REAL_SIZES = [[17, 8.5, 0], [17, 8.5, 18], [17, 9, -12], [18, 9, 18], [20, 9, 18], [20, 9, 0]];
-  const REAL_NOTE = ' Real 3D model. Sizes listed are common ones for this style — confirm the exact SKU with your distributor.';
-  // Real aftermarket wheels with 3D models (models/rims). Shown first.
-  const real = (brand, style, file, finishes, blurb, sizes, pcds, cb, load) => ({
-    brand, style, design: 'six', model: 'models/rims/' + file + '.glb', load: load || 2500, finishes, cb: cb || REAL_CB,
+  const REAL_NOTE = ' Drawn with a generic wheel of a similar spoke layout, not a model of this exact wheel. Sizes listed are common ones for this style — confirm the exact SKU with your distributor.';
+  // Real aftermarket wheel styles. Shown first. Their 3D rim models were removed (no redistribution licence),
+  // so each one names the closest procedural face design instead.
+  const real = (brand, style, design, finishes, blurb, sizes, pcds, cb, load) => ({
+    brand, style, design, load: load || 2500, finishes, cb: cb || REAL_CB,
     blurb: blurb + REAL_NOTE, sizes: sizes || REAL_SIZES, pcds: pcds || ['6x139.7', '6x135', '5x127', '5x150'] });
   const B = ['satin-black', 'gloss-black', 'bronze', 'gunmetal', 'silver'];
 
   const LINES = [
-    real('Method Race Wheels', '305 NV', 'method_305', ['bronze', 'satin-black', 'gunmetal', 'silver'], 'Street-legal race look with a simulated beadlock ring.'),
-    real('Method Race Wheels', '312', 'method_312', ['satin-black', 'bronze', 'gunmetal'], 'Ten-window off-road wheel with a reinforced lip.'),
-    real('Fuel Off-Road', 'Syndicate', 'fuel_syndicate', ['satin-black', 'bronze', 'gunmetal'], 'Mesh-style truck wheel.'),
-    real('KMC', 'Terra', 'kmc_terra', B, 'Clean eight-spoke overland wheel.'),
-    real('XD', 'Grenade', 'xd_grenade', ['satin-black', 'gloss-black', 'gunmetal'], 'Aggressive split-spoke truck wheel.'),
-    real('XD', 'Machete', 'xd_machete', ['satin-black', 'gunmetal', 'bronze'], 'Beadlock-style off-road wheel.'),
-    real('Moto Metal', 'MO951', 'moto_metal_mO951', ['gloss-black', 'chrome', 'satin-black'], 'Eight-spoke wheel with a deep lip.'),
-    real('Dirty Life', 'Mesa Race', 'dirty_life_mesa_race', ['satin-black', 'bronze', 'gunmetal'], 'Race-style wheel with a bolted outer ring.'),
-    real('Level 8', 'Strike 6', 'level_8_strike_6', ['satin-black', 'gunmetal', 'bronze'], 'Six-spoke trail wheel.'),
-    real('Konig', 'Countersteer', 'konig_countersteer', ['satin-black', 'bronze', 'silver'], 'Lightweight six-spoke.'),
-    real('American Racing', 'Mojave', 'ar_mojave', ['silver', 'chrome', 'satin-black'], 'Classic slotted off-road wheel.'),
-    real('Cragar', 'Soft 8', 'cragar_soft_8', ['gloss-black', 'chrome', 'white'], 'Classic eight-hole steel wheel.', [[16, 8, 0], [17, 8.5, 0], [17, 9, -12]]),
-    real('Toyota', 'TRD Pro', 'toyota_trd', ['satin-black', 'gunmetal'], 'Factory TRD Pro wheel.', [[17, 7, 4]], ['6x139.7'], { '6x139.7': 106.1 }, 2300),
+    real('Method Race Wheels', '305 NV', 'beadlock', ['bronze', 'satin-black', 'gunmetal', 'silver'], 'Street-legal race look with a simulated beadlock ring.'),
+    real('Method Race Wheels', '312', 'multi', ['satin-black', 'bronze', 'gunmetal'], 'Ten-window off-road wheel with a reinforced lip.'),
+    real('Fuel Off-Road', 'Syndicate', 'mesh', ['satin-black', 'bronze', 'gunmetal'], 'Mesh-style truck wheel.'),
+    real('KMC', 'Terra', 'split8', B, 'Clean eight-spoke overland wheel.'),
+    real('XD', 'Grenade', 'split8', ['satin-black', 'gloss-black', 'gunmetal'], 'Aggressive split-spoke truck wheel.'),
+    real('XD', 'Machete', 'beadlock', ['satin-black', 'gunmetal', 'bronze'], 'Beadlock-style off-road wheel.'),
+    real('Moto Metal', 'MO951', 'split8', ['gloss-black', 'chrome', 'satin-black'], 'Eight-spoke wheel with a deep lip.'),
+    real('Dirty Life', 'Mesa Race', 'beadlock', ['satin-black', 'bronze', 'gunmetal'], 'Race-style wheel with a bolted outer ring.'),
+    real('Level 8', 'Strike 6', 'six', ['satin-black', 'gunmetal', 'bronze'], 'Six-spoke trail wheel.'),
+    real('Konig', 'Countersteer', 'six', ['satin-black', 'bronze', 'silver'], 'Lightweight six-spoke.'),
+    real('American Racing', 'Mojave', 'five', ['silver', 'chrome', 'satin-black'], 'Classic slotted off-road wheel.'),
+    real('Cragar', 'Soft 8', 'split8', ['gloss-black', 'chrome', 'white'], 'Classic eight-hole steel wheel.', [[16, 8, 0], [17, 8.5, 0], [17, 9, -12]]),
+    real('Toyota', 'TRD Pro', 'six', ['satin-black', 'gunmetal'], 'Factory TRD Pro wheel.', [[17, 7, 4]], ['6x139.7'], { '6x139.7': 106.1 }, 2300),
 
     { style: 'Apex S5', design: 'split5', load: 1565, finishes: ['gloss-black', 'gunmetal', 'silver', 'bronze'], cb: CAR_CB,
       blurb: 'Split five-spoke, flow-formed. Clean OEM-plus look.',

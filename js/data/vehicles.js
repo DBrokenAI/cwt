@@ -230,7 +230,7 @@
     ], ['Uses lug BOLTS with a ball (radius) seat from the factory — aftermarket wheels usually need conical-seat bolts.', 'Performance Pack / Golf R brakes: most 17" wheels do not clear — use 18".', 'Summer-tire cars came with 92Y tires; all-season cars with 92H.'],
     [], ['Factory 18" offset is listed as ET49 and ET51 depending on wheel style.']),
 
-    // ── Older generations added for their real 3D models (specs from memory — not cross-checked) ──
+    // ── Older generations (specs from memory — not cross-checked) ──
     V('tacoma-05', 'Toyota', 'Tacoma', 2005, 2015, 'truck', '6x139.7', 106.1, 'M12x1.5', 'nut', 83, 'direct', [3245, 5285, 1895, 1785], 16, 32.0, [
       ['Base 4x4 / PreRunner', 16, 7, 30, '245/75R16', 109, 'S'],
       ['TRD Off-Road', 16, 7, 30, '265/70R16', 111, 'T'],

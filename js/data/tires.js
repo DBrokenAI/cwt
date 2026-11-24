@@ -79,7 +79,7 @@
     Object.assign(T('toyomt', 'Toyo', 'Open Country M/T', 'Mud-Terrain', 'mt', null, false, 0,
       [5, 5, 4, 2, 10, 4, 3, 7],
       'Heavy-duty mud-terrain with a long-wearing compound. Sizes and ratings here were not cross-checked — confirm with your distributor.',
-      ['LT285/70R17 121P E', 'LT285/75R17 121P E', 'LT275/70R18 125P E', '35x12.50R17LT 121Q E', '35x12.50R20LT 121Q E', '37x12.50R17LT 124Q D']), { model3d: 'models/tires/toyo_open_country_mt.glb' }),
+      ['LT285/70R17 121P E', 'LT285/75R17 121P E', 'LT275/70R18 125P E', '35x12.50R17LT 121Q E', '35x12.50R20LT 121Q E', '37x12.50R17LT 124Q D']), {}),
 
     T('ko2', 'BFGoodrich', 'All-Terrain T/A KO2', 'All-Terrain', 'at', null, true, 50000,
       [7, 6, 8, 5, 9, 5, 5, 8],
@@ -115,9 +115,8 @@
   };
   const UTQG_TEMP = { A: 'Resists heat above 115 mph.', B: 'Resists heat between 100 and 115 mph.', C: 'Resists heat between 85 and 100 mph.' };
 
-  // Real 3D tread models (models/tires).
-  const MODEL3D = { ko2: 'models/tires/bfg_at.glb', km3: 'models/tires/bfg_km3.glb' };
-  TIRES.forEach(t => { if (MODEL3D[t.id]) t.model3d = MODEL3D[t.id]; });
+  // A tire can name a real 3D tread model with `model3d: 'models/tires/<file>.glb'`. None ship at the moment
+  // (the earlier ones had no redistribution licence), so every tire is drawn procedurally.
 
   root.TIRES = TIRES; root.UTQG_TRACTION = UTQG_TRACTION; root.UTQG_TEMP = UTQG_TEMP;
   if (typeof module !== 'undefined') module.exports = { TIRES, UTQG_TRACTION, UTQG_TEMP };
